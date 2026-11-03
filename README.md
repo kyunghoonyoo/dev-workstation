@@ -30,6 +30,8 @@ WSL 2를 통해 Ubuntu Linux 환경을 구성하고 Docker Desktop을 활용하�
 | Docker Client | 29.9.2 |
 | Docker Server | 29.9.2 |
 | Architecture | x86_64 |
+| CPUs | 8 |
+| Memory | 7.625 GiB |
 | Code Editor | Visual Studio Code |
 | Git | 2.43.0 |
 | Remote Repository | GitHub |
@@ -79,6 +81,12 @@ git --version
 ```text
 git version 2.43.0
 ```
+
+**Verification Evidence**
+
+![Project Setup](screenshots/00-project-setup.png)
+
+![Development Environment](screenshots/04-development-environment.png)
 
 ## 3. Project Structure
 
@@ -362,7 +370,7 @@ docker run -d \
 docker exec -it mission-ubuntu-background bash
 ```
 
-컨테이너 내부 명령어:
+컨테이너 내부에서:
 
 ```bash
 echo "Testing Docker exec"
@@ -427,6 +435,8 @@ EXPOSE 80
 | ENV | 개발 환경 변수 설정 |
 | COPY | 직접 작성한 웹페이지를 이미지 내부로 복사 |
 | EXPOSE | 컨테이너 서비스 포트 명시 |
+
+`EXPOSE 80`은 컨테이너에서 사용할 서비스 포트를 문서화하는 설정이며, 실제 호스트 포트 연결은 `docker run -p` 옵션을 사용하였다.
 
 ### 8.4 Web Server Source Code
 
@@ -581,7 +591,7 @@ http://localhost:8081
 
 ### 11.3 호스트 파일 수정
 
-호스트 컴퓨터의 `site/index.html` 파일을 다음과 같이 수정하였다.
+`site/index.html`의 내용을 다음과 같이 수정하였다.
 
 ```html
 <!DOCTYPE html>
@@ -704,16 +714,22 @@ Git을 사용하여 로컬 프로젝트의 버전을 관리하고 GitHub에 원�
 ```bash
 git config --global user.name "kyunghoonyoo"
 
+git config --global user.email "khyoo530@naver.com"
+
 git config --global init.defaultBranch main
 ```
-
-Git 이메일 정보도 별도로 설정하였으며, 개인정보 보호를 위해 공개 문서에는 이메일 주소를 기재하지 않았다.
 
 설정 확인:
 
 ```bash
 git config --list
 ```
+
+실제 Git 사용자 정보와 기본 브랜치 설정이 정상적으로 적용된 것을 확인하였다.
+
+**Verification Evidence**
+
+![Git Configuration](screenshots/18-git-config.png)
 
 ### 13.2 Git Repository 초기화
 
@@ -732,6 +748,12 @@ git commit -m "Complete development workstation mission"
 GitHub Repository:
 
 https://github.com/kyunghoonyoo/dev-workstation
+
+원격 저장소 연결:
+
+```bash
+git remote add origin https://github.com/kyunghoonyoo/dev-workstation.git
+```
 
 원격 저장소 확인:
 
@@ -950,5 +972,6 @@ git push -u origin main
 
 ---
 
-**GitHub Repository:**  
+**GitHub Repository:**
+
 https://github.com/kyunghoonyoo/dev-workstation
