@@ -2,9 +2,9 @@
 
 ## 1. Project Overview
 
-본 프로젝트는 Windows 환경에서 개발자용 워크스테이션을 구축하고, Linux CLI, Docker, Git 및 GitHub의 기본 사용 방법을 실습하는 것을 목표로 한다.
+본 프로젝트는 Windows 환경에서 개발자용 워크스테이션을 구축하고 Linux CLI, Docker, Git 및 GitHub의 기본적인 사용 방법을 실습하는 것을 목표로 한다.
 
-WSL 2를 통해 Ubuntu Linux 환경을 구성하고, Docker Desktop을 활용하여 컨테이너 기반 개발 환경을 구축하였다.
+WSL 2를 통해 Ubuntu Linux 환경을 구성하고 Docker Desktop을 활용하여 컨테이너 기반 개발 환경을 구축하였다.
 
 주요 수행 내용은 다음과 같다.
 
@@ -19,19 +19,19 @@ WSL 2를 통해 Ubuntu Linux 환경을 구성하고, Docker Desktop을 활용하
 
 ## 2. Development Environment
 
-| 항목 | 환경 |
+| 항목 | 개발 환경 |
 |---|---|
 | Host OS | Windows |
-| Linux Distribution | Ubuntu 24.04 |
+| Linux Distribution | Ubuntu 24.04.5 LTS |
 | Virtualization | WSL 2 |
 | Shell | Bash |
-| Terminal | Windows Terminal / PowerShell |
+| Terminal | Windows PowerShell / WSL |
 | Container Platform | Docker Desktop |
 | Docker Client | 29.9.2 |
 | Docker Server | 29.9.2 |
 | Architecture | x86_64 |
 | Code Editor | Visual Studio Code |
-| Version Control | Git |
+| Git | 2.43.0 |
 | Remote Repository | GitHub |
 
 ### 2.1 Environment Verification
@@ -66,12 +66,18 @@ Docker 엔진 정보 확인:
 docker info
 ```
 
-Docker Client와 Server가 정상적으로 연결되는 것을 확인하였다.
+Docker Client와 Docker Server가 정상적으로 연결되는 것을 확인하였다.
 
 Git 버전 확인:
 
 ```bash
 git --version
+```
+
+실행 결과:
+
+```text
+git version 2.43.0
 ```
 
 ## 3. Project Structure
@@ -82,34 +88,36 @@ dev-workstation/
 ├── README.md
 ├── Dockerfile
 │
+├── cli-practice/
+│   ├── notes.txt
+│   └── permission-file.txt
+│
 ├── site/
 │   └── index.html
 │
-├── screenshots/
-│   ├── 00-project-setup.png
-│   ├── 01-terminal-basics.png
-│   ├── 02-file-operations.png
-│   ├── 03-file-permissions.png
-│   ├── 04-development-environment.png
-│   ├── 05-1-docker-info.png
-│   ├── 05-2-docker-info.png
-│   ├── 06-hello-world.png
-│   ├── 07-ubuntu-container.png
-│   ├── 08-docker-exec.png
-│   ├── 09-dockerfile.png
-│   ├── 10-docker-build.png
-│   ├── 11-container-running.png
-│   ├── 12-web-browser.png
-│   ├── 13-docker-operations.png
-│   ├── 14-bind-mount-before.png
-│   ├── 15-bind-mount-after.png
-│   ├── 16-volume-before.png
-│   ├── 17-volume-after.png
-│   ├── 18-git-config.png
-│   ├── 19-vscode-github-integration.png
-│   └── 20-github-repository.png
-│
-└── docs/
+└── screenshots/
+    ├── 00-project-setup.png
+    ├── 01-terminal-basics.png
+    ├── 02-file-operations.png
+    ├── 03-file-permissions.png
+    ├── 04-development-environment.png
+    ├── 05-1-docker-info.png
+    ├── 05-2-docker-info.png
+    ├── 06-hello-world.png
+    ├── 07-ubuntu-container.png
+    ├── 08-docker-exec.png
+    ├── 09-dockerfile.png
+    ├── 10-docker-build.png
+    ├── 11-container-running.png
+    ├── 12-web-browser.png
+    ├── 13-docker-operations.png
+    ├── 14-bind-mount-before.png
+    ├── 15-bind-mount-after.png
+    ├── 16-volume-before.png
+    ├── 17-volume-after.png
+    ├── 18-git-config.png
+    ├── 19-vscode-github-integration.png
+    └── 20-github-repository.png
 ```
 
 ## 4. Linux Terminal Practice
@@ -136,7 +144,9 @@ pwd
 
 ```bash
 touch notes.txt
+
 echo "My Development Workstation" > notes.txt
+
 cat notes.txt
 ```
 
@@ -182,6 +192,7 @@ Linux 파일 및 디렉토리의 접근 권한을 확인하고 변경하였다.
 
 ```bash
 touch permission-file.txt
+
 mkdir permission-dir
 ```
 
@@ -189,24 +200,42 @@ mkdir permission-dir
 
 ```bash
 chmod 600 permission-file.txt
+
 chmod 700 permission-dir
 
-echo "BEFORE"
+echo "BEFORE PERMISSION CHANGE"
 
 ls -l permission-file.txt
+
 ls -ld permission-dir
 ```
 
-### 5.3 변경 후 권한
+실행 결과:
+
+```text
+-rw------- permission-file.txt
+drwx------ permission-dir
+```
+
+### 5.3 권한 변경 후 확인
 
 ```bash
 chmod 644 permission-file.txt
+
 chmod 755 permission-dir
 
-echo "AFTER"
+echo "AFTER PERMISSION CHANGE"
 
 ls -l permission-file.txt
+
 ls -ld permission-dir
+```
+
+실행 결과:
+
+```text
+-rw-r--r-- permission-file.txt
+drwxr-xr-x permission-dir
 ```
 
 ### 5.4 Linux Permission 설명
@@ -219,6 +248,8 @@ ls -ld permission-dir
 
 - 644: 소유자는 읽기와 쓰기 권한을 가지며, 그룹 및 기타 사용자는 읽기 권한을 가진다.
 - 755: 소유자는 읽기, 쓰기 및 실행 권한을 가지며, 그룹 및 기타 사용자는 읽기 및 실행 권한을 가진다.
+
+권한 변경을 통해 파일과 디렉토리의 접근 권한을 관리하는 방법을 확인하였다.
 
 **Verification Evidence**
 
@@ -234,7 +265,11 @@ Docker Desktop의 WSL 2 백엔드를 활용하여 Docker 실행 환경을 구성
 docker --version
 ```
 
-Docker Client Version: 29.9.2
+실행 결과:
+
+```text
+Docker version 29.9.2, build a82e528
+```
 
 ### 6.2 Docker Engine Verification
 
@@ -244,15 +279,21 @@ docker info
 
 Docker Client와 Docker Server가 정상적으로 연결되는 것을 확인하였다.
 
-Docker Server Version은 29.9.2이며, Docker Desktop 환경에서 정상적으로 작동한다.
+주요 확인 항목:
+
+- Docker Server Version: 29.9.2
+- Operating System: Docker Desktop
+- Architecture: x86_64
+- CPUs: 8
+- Total Memory: 약 7.625 GiB
 
 **Verification Evidence**
 
-Docker 엔진 정보는 두 개의 스크린샷으로 기록하였다.
+Docker 엔진 정보는 두 장의 스크린샷으로 기록하였다.
 
-![Docker Info 1](screenshots/05-1-docker-info.png)
+![Docker Info Screenshot 1](screenshots/05-1-docker-info.png)
 
-![Docker Info 2](screenshots/05-2-docker-info.png)
+![Docker Info Screenshot 2](screenshots/05-2-docker-info.png)
 
 ### 6.3 Hello World Container
 
@@ -289,6 +330,7 @@ docker run -it \
 
 ```bash
 pwd
+
 ls -la
 
 echo "Hello from my Ubuntu container"
@@ -299,8 +341,10 @@ exit
 컨테이너 종료 후 상태를 확인하였다.
 
 ```bash
-docker ps -a
+docker ps -a --filter name=mission-ubuntu-interactive
 ```
+
+컨테이너가 Exited 상태로 변경된 것을 확인하였다.
 
 ### 7.2 Docker Exec 실습
 
@@ -318,26 +362,31 @@ docker run -d \
 docker exec -it mission-ubuntu-background bash
 ```
 
-컨테이너 내부에서:
+컨테이너 내부 명령어:
 
 ```bash
 echo "Testing Docker exec"
+
 exit
 ```
 
 컨테이너 상태 확인:
 
 ```bash
-docker ps
+docker ps --filter name=mission-ubuntu-background
 ```
 
 컨테이너 중지:
 
 ```bash
 docker stop mission-ubuntu-background
+
+docker ps -a --filter name=mission-ubuntu-background
 ```
 
-`docker exec`는 실행 중인 컨테이너에 별도의 프로세스를 실행한다. 해당 프로세스가 종료되어도 메인 프로세스가 계속 실행 중이라면 컨테이너는 유지된다.
+`docker exec`는 실행 중인 컨테이너에 별도의 프로세스를 실행한다. 해당 프로세스에서 `exit`을 입력해도 메인 프로세스가 계속 실행 중이라면 컨테이너는 유지된다.
+
+반면 메인 프로세스가 종료되거나 `docker stop`을 실행하면 컨테이너가 중지된다.
 
 **Verification Evidence**
 
@@ -383,6 +432,8 @@ EXPOSE 80
 
 `site/index.html`
 
+최초 커스텀 이미지 빌드에 사용한 웹페이지:
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -396,6 +447,8 @@ EXPOSE 80
 </body>
 </html>
 ```
+
+이후 바인드 마운트 실습을 위해 호스트의 `site/index.html`을 수정하였다.
 
 ### 8.5 Docker Image Build
 
@@ -478,6 +531,7 @@ docker images
 
 ```bash
 docker ps
+
 docker ps -a
 ```
 
@@ -527,11 +581,20 @@ http://localhost:8081
 
 ### 11.3 호스트 파일 수정
 
-`site/index.html`의 내용을 다음과 같이 변경하였다.
+호스트 컴퓨터의 `site/index.html` 파일을 다음과 같이 수정하였다.
 
 ```html
-<h1>Updated without rebuilding Docker!</h1>
-<p>Bind mount works successfully.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Updated Page</title>
+</head>
+<body>
+    <h1>Updated without rebuilding Docker!</h1>
+    <p>Bind mount works successfully.</p>
+</body>
+</html>
 ```
 
 ### 11.4 변경 후 확인
@@ -544,7 +607,9 @@ Docker 이미지를 다시 빌드하지 않고도 호스트 파일의 변경 사
 
 바인드 마운트는 호스트 컴퓨터의 특정 경로를 컨테이너 내부의 경로에 연결하는 기능이다.
 
-이를 통해 호스트에서 파일을 수정하면 컨테이너에서도 변경 사항을 확인할 수 있다.
+이번 실습에서는 `:ro` 옵션을 사용하여 컨테이너에서 해당 마운트 경로를 읽기 전용으로 연결하였다.
+
+호스트에서 파일을 수정하면 컨테이너에서도 변경 사항을 확인할 수 있다.
 
 **Verification Evidence**
 
@@ -637,12 +702,12 @@ Git을 사용하여 로컬 프로젝트의 버전을 관리하고 GitHub에 원�
 ### 13.1 Git 사용자 정보 및 기본 브랜치 설정
 
 ```bash
-git config --global user.name "Your Name"
-
-git config --global user.email "YOUR_EMAIL"
+git config --global user.name "kyunghoonyoo"
 
 git config --global init.defaultBranch main
 ```
+
+Git 이메일 정보도 별도로 설정하였으며, 개인정보 보호를 위해 공개 문서에는 이메일 주소를 기재하지 않았다.
 
 설정 확인:
 
@@ -686,16 +751,30 @@ git branch --show-current
 git push -u origin main
 ```
 
-### 13.4 Git과 GitHub의 차이
+### 13.4 GitHub Authentication
+
+HTTPS 방식의 Git 작업을 위해 GitHub CLI를 사용하여 브라우저 기반 인증을 진행하였다.
+
+```bash
+gh auth login
+
+gh auth status
+
+gh auth setup-git
+```
+
+인증 완료 후 GitHub 원격 저장소에 정상적으로 Push할 수 있었다.
+
+### 13.5 Git과 GitHub의 차이
 
 - Git: 로컬 컴퓨터에서 소스코드의 변경 사항과 버전을 관리하는 분산 버전 관리 시스템이다.
 - GitHub: Git 저장소를 원격으로 호스팅하고 프로젝트 공유 및 협업을 지원하는 플랫폼이다.
 
-### 13.5 VS Code and GitHub Integration
+### 13.6 VS Code and GitHub Integration
 
-Visual Studio Code에서 GitHub 계정으로 로그인하고 프로젝트를 열어 Git 저장소가 정상적으로 인식되는 것을 확인하였다.
+Visual Studio Code에서 GitHub 계정으로 로그인하고 프로젝트 저장소를 열었다.
 
-Source Control 패널과 통합 터미널을 통해 현재 브랜치, 원격 저장소 주소 및 Git 상태를 확인하였다.
+Source Control 패널에서 Git 저장소를 확인하고 통합 터미널에서 원격 저장소 주소, 브랜치 및 Git 상태를 확인하였다.
 
 **Verification Evidence**
 
@@ -736,7 +815,7 @@ wsl --list --verbose
 
 Ubuntu-24.04가 WSL Version 2로 설치되어 실행되는 것을 확인하였다.
 
-추가로 Docker Client와 Server가 정상적으로 연결되고 컨테이너가 실행되는 것을 확인하였다.
+추가로 Docker Client와 Server가 정상적으로 연결되고 Docker 컨테이너가 실행되는 것을 확인하였다.
 
 **Resolution / Alternative**
 
@@ -764,7 +843,7 @@ docker ps -a
 
 **Resolution**
 
-기존 컨테이너를 확인하고 새로운 고유 이름을 사용하여 실습을 진행하였다.
+기존 컨테이너를 임의로 삭제하지 않고 새로운 고유 이름을 사용하였다.
 
 ```bash
 docker run -it \
@@ -791,11 +870,13 @@ GitHub는 HTTPS Git 작업에서 일반 계정 비밀번호를 이용한 인증�
 
 **Resolution**
 
-GitHub CLI를 사용하여 브라우저 기반 인증을 진행하였다.
+GitHub CLI를 설치하고 브라우저 기반 인증을 진행하였다.
 
 ```bash
 gh auth login
+
 gh auth status
+
 gh auth setup-git
 ```
 
@@ -824,7 +905,7 @@ GitHub 원격 저장소에 로컬 저장소에 존재하지 않는 별도의 커
 git pull --no-rebase origin main --allow-unrelated-histories
 ```
 
-병합 커밋을 완료한 후 다시 Push하였다.
+병합을 완료한 후 다시 Push하였다.
 
 ```bash
 git push -u origin main
@@ -865,7 +946,7 @@ git push -u origin main
 
 또한 Git을 활용한 로컬 버전 관리와 GitHub를 통한 원격 저장소 연동을 경험하였다.
 
-이번 실습을 통해 재현 가능한 개발 환경을 구축하고, 실행 결과를 검증하며 기술 문서로 정리하는 기본적인 개발 역량을 익힐 수 있었다.
+이번 실습을 통해 재현 가능한 개발 환경을 구축하고 실행 결과를 검증하며 기술 문서로 정리하는 기본적인 개발 역량을 익힐 수 있었다.
 
 ---
 
